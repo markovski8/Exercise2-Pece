@@ -23,6 +23,7 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
+# components/lambda/main.tf
 resource "aws_iam_policy" "lambda_sns_policy" {
   name        = "lambda_sns_policy"
   description = "Policy to allow Lambda to publish to SNS"
@@ -31,11 +32,9 @@ resource "aws_iam_policy" "lambda_sns_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Action = [
-          "sns:Publish"
-        ],
+        Action   = "sns:Publish",
         Effect   = "Allow",
-        Resource = "arn:aws:sns:eu-central-1:471112871708:ordertopic"
+        Resource = var.sns_topic_arn
       }
     ]
   })

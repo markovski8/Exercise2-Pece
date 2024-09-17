@@ -1,6 +1,7 @@
 module "lambda" {
   source = "./components/lambda"
   api_gateway_execution_arn = module.apiGateway.api_gateway_execution_arn
+  sns_topic_arn = module.sns.sns_topic_arn
 }
 
 module "apiGateway" {
