@@ -1,3 +1,5 @@
+
+
 resource "aws_sns_topic" "my_sns_topic" {
   name = "ordertopic"
 }
