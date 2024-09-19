@@ -1,5 +1,7 @@
+variable "lambda_invoke_arn" {}
+variable "region" {}
+variable "http_method" {}
+variable "lambda_function_name" {}
 variable "lambda_function_arn" {
-  description = "ARN of the Lambda function"
-  type        = string
+  
 }
-

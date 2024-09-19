@@ -6,7 +6,7 @@ SNS_TOPIC_ARN = 'arn:aws:sns:eu-central-1:471112871708:ordertopic'
 
 def lambda_handler(event, context):
     # Check if the request method is POST
-    if event['requestContext']['http']['method'] == 'POST':
+    if event['requestContext']['httpMethod'] == 'POST':
         try:
             body = json.loads(event.get('body', '{}'))
         except json.JSONDecodeError:
