@@ -35,7 +35,59 @@ resource "aws_api_gateway_stage" "stages" {
   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
   stage_name = "dev"
   deployment_id = aws_api_gateway_deployment.api_deploy.id
- 
+  
 }
 
-# data "aws_region" "current" {}
+resource "aws_api_gateway_method_settings" "example" {
+  rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+  stage_name  = aws_api_gateway_stage.stages.stage_name
+  method_path  = "*/*"  
+
+  settings {
+    logging_level      = "INFO"         
+    data_trace_enabled = true           
+    metrics_enabled    = true           
+  }
+}
+
+resource "aws_iam_role" "api_role" {
+  name = "roleforapi"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "apigateway.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "apigateway_cloudwatch_policy" {
+  name        = "apigateway_cloudwatch_policy"
+  description = "Policy to allow API Gateway to write logs to CloudWatch"
+  
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "apigateway_policy_attachment" {
+  role       = aws_iam_role.api_role.name
+  policy_arn  = aws_iam_policy.apigateway_cloudwatch_policy.arn
+}
